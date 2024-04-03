@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\ContactFormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::prefix('contacts') // 頭に contacts をつける
+ ->middleware(['auth']) // 認証
+ ->name('contacts.') // ルート名
+ ->controller(ContactFormController::class) // コントローラ指定(laravel9から)
+ ->group(function(){ // グループ化
+ Route::get('/', 'index')->name('index'); // 名前つきルート
+ Route::get('/create', 'create')->name('create'); // 名前つきルート
+ });
+
+Route::get('tests/test', [ TestController::class, 'index' ]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
