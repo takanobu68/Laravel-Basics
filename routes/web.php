@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// "use"キーワードは他のファイルからクラスをインポートするために使用される。
-use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// getリクエストを受け付けるためのルートを定義
-// 第一引数はリクエストが送信されるURL,第二引数はURLに対して実行される処理
-// tests/testというURLがリクエストされた場合に、TestControllerクラスのindexメソッドが実行される
-Route::get('tests/test',[TestController::class, 'index']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
