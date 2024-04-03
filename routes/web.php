@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// "use"キーワードは他のファイルからクラスをインポートするために使用される。
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\ContactFormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +19,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// getリクエストを受け付けるためのルートを定義
-// 第一引数はリクエストが送信されるURL,第二引数はURLに対して実行される処理
-// tests/testというURLがリクエストされた場合に、TestControllerクラスのindexメソッドが実行される
-Route::get('tests/test',[TestController::class, 'index']);
+Route::prefix('contacts') // 頭に contacts をつける
+ ->middleware(['auth']) // 認証
+ ->name('contacts.') // ルート名
+ ->controller(ContactFormController::class) // コントローラ指定(laravel9から)
+ ->group(function(){ // グループ化
+ Route::get('/', 'index')->name('index'); // 名前つきルート
+ Route::get('/create', 'create')->name('create'); // 名前つきルート
+ });
+
+Route::get('tests/test', [ TestController::class, 'index' ]);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
